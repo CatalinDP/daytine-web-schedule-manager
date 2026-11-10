@@ -1,0 +1,35 @@
+@layer base {
+  html {
+    background-color: var(--color-background);
+    color: var(--color-on-background);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    min-height: 100dvh;
+    overflow-wrap: anywhere;
+    font-size: var(--text-body-medium);
+    line-height: var(--text-body-medium--line-height);
+  }
+
+  /* Utilities can adjust the offset, e.g. inset rings inside clipped cards. */
+  :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  button:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

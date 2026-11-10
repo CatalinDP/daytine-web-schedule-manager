@@ -1,0 +1,136 @@
+/*
+ * Color roles. The dark values appear twice because a media query and an
+ * attribute selector cannot share one rule: keep both dark blocks identical.
+ * data-theme="light|dark" on <html> forces a theme; unset follows the system.
+ */
+:root {
+  color-scheme: light;
+
+  --dt-primary: #4c5bd4;
+  --dt-on-primary: #ffffff;
+  --dt-primary-container: #dfe0ff;
+  --dt-on-primary-container: #0a1366;
+  --dt-inverse-primary: #bcc2ff;
+  --dt-secondary: #5a5d72;
+  --dt-on-secondary: #ffffff;
+  --dt-secondary-container: #dfe1f9;
+  --dt-on-secondary-container: #171b2c;
+  --dt-tertiary: #775a00;
+  --dt-on-tertiary: #ffffff;
+  --dt-tertiary-container: #ffe08a;
+  --dt-on-tertiary-container: #251a00;
+  --dt-background: #f8f8fb;
+  --dt-surface: #f8f8fb;
+  --dt-on-background: #1b1b20;
+  --dt-on-surface: #1b1b20;
+  --dt-surface-variant: #ececf2;
+  --dt-on-surface-variant: #5f6070;
+  --dt-surface-container-lowest: #ffffff;
+  --dt-surface-container-low: #f2f2f7;
+  --dt-surface-container: #ececf2;
+  --dt-surface-container-high: #e6e6ec;
+  --dt-surface-container-highest: #e0e0e7;
+  --dt-inverse-surface: #303036;
+  --dt-inverse-on-surface: #f2f0f7;
+  --dt-outline: #777680;
+  --dt-outline-variant: #c8c8d3;
+  --dt-error: #ba1a1a;
+  --dt-on-error: #ffffff;
+  --dt-error-container: #ffdad6;
+  --dt-on-error-container: #410002;
+
+  /* Modal backdrop: reuses the darkest role of each theme, not a new color. */
+  --dt-scrim: var(--dt-on-surface);
+
+  --dt-shadow-card:
+    0 2px 4px -1px rgb(0 0 0 / 0.1), 0 4px 5px 0 rgb(0 0 0 / 0.07), 0 1px 10px 0 rgb(0 0 0 / 0.06);
+  --dt-shadow-nav:
+    0 5px 5px -3px rgb(0 0 0 / 0.1), 0 8px 10px 1px rgb(0 0 0 / 0.07),
+    0 3px 14px 2px rgb(0 0 0 / 0.06);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    color-scheme: dark;
+
+    --dt-primary: #bcc2ff;
+    --dt-on-primary: #14207f;
+    --dt-primary-container: #3441b8;
+    --dt-on-primary-container: #dfe0ff;
+    --dt-inverse-primary: #4c5bd4;
+    --dt-secondary: #c3c5dd;
+    --dt-on-secondary: #171b2c;
+    --dt-secondary-container: #424659;
+    --dt-on-secondary-container: #dfe1f9;
+    --dt-tertiary: #b07c0a;
+    --dt-on-tertiary: #251a00;
+    --dt-tertiary-container: #594400;
+    --dt-on-tertiary-container: #ffe08a;
+    --dt-background: #121318;
+    --dt-surface: #121318;
+    --dt-on-background: #e4e1e9;
+    --dt-on-surface: #e4e1e9;
+    --dt-surface-variant: #292a2f;
+    --dt-on-surface-variant: #c7c5d0;
+    --dt-surface-container-lowest: #0d0e13;
+    --dt-surface-container-low: #1b1b21;
+    --dt-surface-container: #1f1f25;
+    --dt-surface-container-high: #292a2f;
+    --dt-surface-container-highest: #34343a;
+    --dt-inverse-surface: #e4e1e9;
+    --dt-inverse-on-surface: #303036;
+    --dt-outline: #918f9a;
+    --dt-outline-variant: #46464f;
+    --dt-error: #ffb4ab;
+    --dt-on-error: #690005;
+    --dt-error-container: #93000a;
+    --dt-on-error-container: #ffdad6;
+
+    --dt-scrim: var(--dt-surface-container-lowest);
+
+    --dt-shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.3);
+    --dt-shadow-nav: 0 2px 6px 0 rgb(0 0 0 / 0.35);
+  }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --dt-primary: #bcc2ff;
+  --dt-on-primary: #14207f;
+  --dt-primary-container: #3441b8;
+  --dt-on-primary-container: #dfe0ff;
+  --dt-inverse-primary: #4c5bd4;
+  --dt-secondary: #c3c5dd;
+  --dt-on-secondary: #171b2c;
+  --dt-secondary-container: #424659;
+  --dt-on-secondary-container: #dfe1f9;
+  --dt-tertiary: #b07c0a;
+  --dt-on-tertiary: #251a00;
+  --dt-tertiary-container: #594400;
+  --dt-on-tertiary-container: #ffe08a;
+  --dt-background: #121318;
+  --dt-surface: #121318;
+  --dt-on-background: #e4e1e9;
+  --dt-on-surface: #e4e1e9;
+  --dt-surface-variant: #292a2f;
+  --dt-on-surface-variant: #c7c5d0;
+  --dt-surface-container-lowest: #0d0e13;
+  --dt-surface-container-low: #1b1b21;
+  --dt-surface-container: #1f1f25;
+  --dt-surface-container-high: #292a2f;
+  --dt-surface-container-highest: #34343a;
+  --dt-inverse-surface: #e4e1e9;
+  --dt-inverse-on-surface: #303036;
+  --dt-outline: #918f9a;
+  --dt-outline-variant: #46464f;
+  --dt-error: #ffb4ab;
+  --dt-on-error: #690005;
+  --dt-error-container: #93000a;
+  --dt-on-error-container: #ffdad6;
+
+  --dt-scrim: var(--dt-surface-container-lowest);
+
+  --dt-shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.3);
+  --dt-shadow-nav: 0 2px 6px 0 rgb(0 0 0 / 0.35);
+}
