@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 import { ThemeService } from './theme/theme.service';
+import { TaskNotifierService } from './data/task.notifier.service';
 
 @Component({
   selector: 'dt-root',
@@ -11,7 +12,7 @@ import { ThemeService } from './theme/theme.service';
 })
 export class App {
   constructor() {
-    // Created here so the stored theme applies on every route.
+    inject(TaskNotifierService);
     inject(ThemeService);
   }
 }

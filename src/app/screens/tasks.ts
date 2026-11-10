@@ -18,8 +18,8 @@ import { ClockService } from '../data/clock.service';
 import { addDays, formatWeekRange, weekOf } from '../data/day.model';
 
 // 0 = Monday ... 6 = Sunday
-function todayIndex(): number {
-  return (new Date().getDay() + 6) % 7;
+function weekIndexOf(date: Date): number {
+  return (date.getDay() + 6) % 7;
 }
 
 @Component({
@@ -156,14 +156,14 @@ export class Tasks {
   protected showHint = signal(true);
 
   // Any date inside the week being shown
-  private reference = signal(new Date());
+  private reference = signal(this.clock.now());
   // Passing clock.now() makes "isToday" update by itself at midnight
   protected week = computed(() => weekOf(this.reference(), 'MONDAY', this.clock.now()));
   protected weekRange = computed(() => formatWeekRange(this.week()));
   protected isCurrentWeek = computed(() => this.week().some((d) => d.isToday));
 
   // Index (0 = Monday) of the day shown on small screens. Starts on today.
-  private day = signal(todayIndex());
+  private day = signal(weekIndexOf(this.clock.now()));
   protected selectedDay = computed(() => this.week()[this.day()]);
   protected dayName = computed(() => `${this.selectedDay().label} ${this.selectedDay().date}`);
 
@@ -198,8 +198,9 @@ export class Tasks {
   }
 
   protected goToToday() {
-    this.reference.set(new Date());
-    this.day.set(todayIndex());
+    const now = this.clock.now();
+    this.reference.set(now);
+    this.day.set(weekIndexOf(now));
   }
 
   // Going back from Monday or forward from Sunday changes the week

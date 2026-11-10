@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { Button } from '../design/button';
@@ -8,6 +8,7 @@ import { TimeInput } from '../design/time-input';
 import { ClockService } from '../data/clock.service';
 import { STRINGS } from '../mocks/strings';
 import { ProfileService } from '../data/profile.store';
+import { NotificationService } from '../data/notifications.service';
 import { TimeValue } from '../design/time';
 
 @Component({
@@ -47,6 +48,7 @@ import { TimeValue } from '../design/time';
             autocomplete="given-name"
             [label]="strings.nameLabel"
             [value]="name()"
+            [error]="nameError()"
             (valueChange)="name.set($event)"
           />
 
@@ -71,6 +73,7 @@ import { TimeValue } from '../design/time';
 export class Welcome {
   private readonly router = inject(Router);
   private readonly profileService = inject(ProfileService);
+  private readonly notifications = inject(NotificationService);
 
   protected readonly strings = STRINGS.welcome;
   protected readonly timeLabels = STRINGS.time;
@@ -79,9 +82,17 @@ export class Welcome {
     this.profileService.user()?.start ?? { hour: 9, minute: 0 },
   );
   protected readonly name = signal(this.profileService.user()?.name ?? '');
+  // The error shows only after the first try, not while the user is still typing
+  private readonly submitted = signal(false);
+  protected readonly nameError = computed(() =>
+    this.submitted() && this.name().trim().length < 2 ? this.strings.nameTooShort : null,
+  );
 
   protected finish(): void {
-    if (this.name().trim().length < 2) return;
+    this.submitted.set(true);
+    if (this.nameError()) return;
+    // Browsers only show the permission prompt after a click, so it is asked here
+    void this.notifications.request();
     this.profileService.saveUser(this.name().trim(), this.startTime());
     void this.router.navigate(['/']);
   }

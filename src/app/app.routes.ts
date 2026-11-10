@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 
+import { requireProfile } from './data/profile.guard';
 import { STRINGS } from './mocks/strings';
 
 export const routes: Routes = [
@@ -10,6 +11,7 @@ export const routes: Routes = [
   },
   {
     path: '',
+    canActivate: [requireProfile],
     loadComponent: () => import('./screens/shell').then((m) => m.Shell),
     children: [
       {

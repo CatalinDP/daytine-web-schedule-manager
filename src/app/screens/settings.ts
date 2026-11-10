@@ -23,6 +23,7 @@ import { STRINGS } from '../mocks/strings';
 import { ThemeMode, ThemeService } from '../theme/theme.service';
 import { ProfileService } from '../data/profile.store';
 import { BackupService, ImportError } from '../data/backup.service';
+import { NotificationService } from '../data/notifications.service';
 
 type OpenDialog = 'theme' | 'interval' | 'window' | 'units' | 'name' | 'start' | 'import' | null;
 type Units = 'celsius' | 'fahrenheit';
@@ -95,9 +96,9 @@ function labelOf<T>(options: readonly DialogOption<T>[], value: T): string {
         <dt-card-setting-container>
           <dt-double-line-setting
             [label]="s.notificationPermission"
-            [state]="s.allowed"
-            [actionLabel]="common.openSettings"
-            (action)="showNotConnected()"
+            [state]="notificationState()"
+            [actionLabel]="notificationAction()"
+            (action)="changeNotifications()"
           />
         </dt-card-setting-container>
       </section>
@@ -294,6 +295,7 @@ export class Settings {
   protected readonly theme = inject(ThemeService);
   private readonly profileService = inject(ProfileService);
   private readonly backupService = inject(BackupService);
+  private readonly notifications = inject(NotificationService);
 
   protected readonly s = S;
   protected readonly brand = STRINGS.brand;
@@ -320,6 +322,20 @@ export class Settings {
 
   // File chosen by the user, waiting for the confirmation dialog
   private readonly pendingFile = signal<File | null>(null);
+
+  protected readonly notificationState = computed(() => {
+    if (!this.notifications.supported) return S.notSupported;
+    return { granted: S.allowed, denied: S.blocked, default: S.notAllowed }[
+      this.notifications.permission()
+    ];
+  });
+  // Only an unanswered permission can be asked from the page; otherwise we explain how to change it
+  protected readonly canAskNotifications = computed(
+    () => this.notifications.supported && this.notifications.permission() === 'default',
+  );
+  protected readonly notificationAction = computed(() =>
+    this.canAskNotifications() ? S.allow : S.howToChange,
+  );
 
   protected readonly intervalLabel = computed(() => labelOf(INTERVAL_OPTIONS, this.interval()));
   protected readonly startLabel = computed(() => formatTime(this.startTime()));
@@ -356,6 +372,14 @@ export class Settings {
   protected selectTheme(mode: ThemeMode): void {
     this.theme.setMode(mode);
     this.dialog.set(null);
+  }
+
+  protected async changeNotifications(): Promise<void> {
+    if (this.canAskNotifications()) {
+      await this.notifications.request();
+    } else {
+      this.snackbar.set(S.notificationsHelp);
+    }
   }
 
   protected showNotConnected(): void {

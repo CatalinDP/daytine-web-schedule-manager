@@ -248,6 +248,33 @@ describe('TimeInput', () => {
 
     expect(emitted).not.toHaveBeenCalled();
   });
+
+  // Like a real parent: every emitted value is passed back in, which re-renders the boxes
+  it('keeps what the user types until the box loses focus', async () => {
+    const { fixture, host } = await render(TimeInput, {
+      label: 'Start',
+      labels: TIME_LABELS,
+      value: { hour: 7, minute: 0 },
+    });
+    fixture.componentInstance.valueChange.subscribe((v) =>
+      fixture.componentRef.setInput('value', v),
+    );
+    const hour = query<HTMLInputElement>(host, '[aria-label=Hour]');
+
+    hour.dispatchEvent(new FocusEvent('focus'));
+    type(hour, '1');
+    await fixture.whenStable();
+    expect(hour.value).toBe('1');
+
+    type(hour, '15');
+    await fixture.whenStable();
+    expect(hour.value).toBe('15');
+
+    type(hour, '9');
+    hour.dispatchEvent(new FocusEvent('blur'));
+    await fixture.whenStable();
+    expect(hour.value).toBe('09');
+  });
 });
 
 describe('DayPicker', () => {

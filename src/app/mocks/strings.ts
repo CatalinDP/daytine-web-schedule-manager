@@ -25,10 +25,14 @@ export const STRINGS = {
     intro: 'Organize simple reminders, celebrate your progress, and leave room for what matters',
     startTime: 'What time does your day start?',
     nameLabel: 'Enter your name',
+    nameTooShort: 'Your name needs at least 2 letters',
     notificationTitle: 'Get reminded on time',
     notificationBody:
       "The app sends a notification when each task starts, so you don't have to keep checking. You can change this anytime in Settings.",
     cta: 'Create my routine',
+  },
+  notifications: {
+    taskStarts: (time: string) => `Starts at ${time}`,
   },
   home: {
     greeting: (name: string) => `Welcome, ${name}`,
@@ -90,6 +94,12 @@ export const STRINGS = {
     locationPermission: 'Location permission',
     allowed: 'Allowed',
     notAllowed: 'Not allowed',
+    blocked: 'Blocked',
+    notSupported: 'Not supported in this browser',
+    allow: 'Allow',
+    howToChange: 'How to change',
+    notificationsHelp:
+      'Use the site settings of your browser (the icon next to the address) to change this',
     appearance: 'Appearance',
     theme: 'Theme',
     themeSystem: 'System',

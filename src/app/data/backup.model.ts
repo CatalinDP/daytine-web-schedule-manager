@@ -100,6 +100,6 @@ function toBackupTask(t: Task): BackupTask {
 
 /** "daytine-backup-2026-11-09.json" */
 export function backupFileName(now: Date): string {
-  // TODO: step 1 of docs/export-import-plan.md (tip: dateKey in day.model)
-  return `daytine-backup-${dateKey(now)}-ver:${BACKUP_VERSION}.json`;
+  // The version is inside the file, and ':' is not allowed in Windows file names
+  return `daytine-backup-${dateKey(now)}.json`;
 }

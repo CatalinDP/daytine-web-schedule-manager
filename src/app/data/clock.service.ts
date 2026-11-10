@@ -9,6 +9,10 @@ export class ClockService {
   readonly now = this._now.asReadonly();
   readonly todayId = computed(() => dayIdOf(this._now()));
   readonly todayLabel = computed(() => formatLongDate(this._now()));
+  readonly nowMinutes = computed(() => {
+    const d = this._now();
+    return d.getHours() * 60 + d.getMinutes();
+  });
 
   constructor() {
     // First tick lined up with the next minute change, then every 30 s

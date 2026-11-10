@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, ElementRef, inject, viewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  ElementRef,
+  inject,
+  viewChild,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter, map } from 'rxjs';
@@ -30,7 +37,7 @@ function pathOf(url: string): string {
       [items]="items"
       [selected]="currentPath()"
       [ariaLabel]="strings.nav.ariaLabel"
-      [profile]="profile"
+      [profile]="profile()"
     />
 
     <!-- The bottom padding keeps the last content clear of the floating nav. -->
@@ -57,7 +64,10 @@ export class Shell {
 
   protected readonly strings = STRINGS;
   protected readonly items = NAV_ITEMS;
-  protected readonly profile = { name: this.profileService.user()?.name ?? '', route: '/settings' };
+  protected readonly profile = computed(() => ({
+    name: this.profileService.user()?.name ?? '',
+    route: '/settings',
+  }));
   protected readonly currentPath = toSignal(
     this.router.events.pipe(
       filter((event) => event instanceof NavigationEnd),

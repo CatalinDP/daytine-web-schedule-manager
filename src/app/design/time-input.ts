@@ -1,13 +1,17 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   ElementRef,
   input,
   output,
+  signal,
   viewChild,
 } from '@angular/core';
 
 import { TimeValue, padTime } from './time';
+
+type Box = 'hour' | 'minute';
 
 export interface TimeInputLabels {
   readonly hour: string;
@@ -37,10 +41,10 @@ const BOX =
           maxlength="2"
           autocomplete="off"
           [attr.aria-label]="labels().hour"
-          [value]="pad(value().hour)"
-          (focus)="selectAll($event)"
+          [value]="hourText()"
+          (focus)="startEditing($event, 'hour')"
           (input)="onHourInput($event)"
-          (blur)="resetBox($event, value().hour)"
+          (blur)="editing.set(null)"
         />
         <span class="text-display-time text-on-surface lg:text-title-large" aria-hidden="true"
           >:</span
@@ -53,10 +57,10 @@ const BOX =
           maxlength="2"
           autocomplete="off"
           [attr.aria-label]="labels().minute"
-          [value]="pad(value().minute)"
-          (focus)="selectAll($event)"
+          [value]="minuteText()"
+          (focus)="startEditing($event, 'minute')"
           (input)="onMinuteInput($event)"
-          (blur)="resetBox($event, value().minute)"
+          (blur)="editing.set(null)"
         />
       </div>
     </fieldset>
@@ -71,16 +75,28 @@ export class TimeInput {
 
   private minuteBox = viewChild.required<ElementRef<HTMLInputElement>>('minuteBox');
 
-  protected pad(n: number) {
-    return padTime(n);
-  }
+  // While a box has focus it shows exactly what was typed. If it showed the padded value,
+  // typing "1" would turn into "01" and, with maxlength 2, the next digit could not be added.
+  protected readonly editing = signal<Box | null>(null);
+  private readonly typed = signal('');
 
-  protected selectAll(event: FocusEvent) {
-    (event.target as HTMLInputElement).select();
+  protected readonly hourText = computed(() =>
+    this.editing() === 'hour' ? this.typed() : padTime(this.value().hour),
+  );
+  protected readonly minuteText = computed(() =>
+    this.editing() === 'minute' ? this.typed() : padTime(this.value().minute),
+  );
+
+  protected startEditing(event: FocusEvent, box: Box) {
+    const element = event.target as HTMLInputElement;
+    this.typed.set(element.value);
+    this.editing.set(box);
+    element.select(); // so typing replaces the old value
   }
 
   protected onHourInput(event: Event) {
     const text = (event.target as HTMLInputElement).value;
+    this.typed.set(text);
     const hour = Number(text);
     if (text === '' || isNaN(hour) || hour > 23) return;
 
@@ -91,14 +107,10 @@ export class TimeInput {
 
   protected onMinuteInput(event: Event) {
     const text = (event.target as HTMLInputElement).value;
+    this.typed.set(text);
     const minute = Number(text);
     if (text === '' || isNaN(minute) || minute > 59) return;
 
     this.valueChange.emit({ ...this.value(), minute });
-  }
-
-  // On blur, show the saved value again (e.g. if the user typed "99")
-  protected resetBox(event: FocusEvent, n: number) {
-    (event.target as HTMLInputElement).value = padTime(n);
   }
 }

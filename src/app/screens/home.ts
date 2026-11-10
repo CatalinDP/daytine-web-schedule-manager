@@ -46,7 +46,7 @@ import { Task, isDoneOn } from '../data/task.model';
   template: `
     <div class="mx-auto flex max-w-[70rem] flex-col gap-4 lg:mx-0 lg:max-w-[100rem]">
       <dt-app-top-bar
-        [label]="strings.home.greeting(userName)"
+        [label]="strings.home.greeting(userName())"
         [title]="today()"
         [brand]="strings.brand"
       >
@@ -152,7 +152,7 @@ export class Home {
   private clock = inject(ClockService);
 
   protected strings = STRINGS;
-  protected userName = this.profile.user()?.name ?? '';
+  protected userName = computed(() => this.profile.user()?.name ?? '');
   protected today = this.clock.todayLabel;
   protected forecast = WEATHER;
   protected streakDays = STREAK_DAYS;
