@@ -5,7 +5,6 @@ import { DialogOption } from './app-dialog';
 import { Button } from './button';
 import { Icon } from './icon';
 
-// Rows sit in a clipped card, so their focus ring is drawn inside the row.
 const ROW_FOCUS = 'focus-visible:-outline-offset-2';
 
 @Component({
@@ -15,7 +14,6 @@ const ROW_FOCUS = 'focus-visible:-outline-offset-2';
 })
 export class SectionTitle {}
 
-/** Task-card surface that draws an inset divider between its projected rows. */
 @Component({
   selector: 'dt-card-setting-container',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -63,7 +61,6 @@ export class CardSettingContainer {}
 export class SingleLineSettingButton {
   readonly label = input.required<string>();
   readonly value = input<string>();
-  /** False renders a read-only row, such as the app version. */
   readonly interactive = input(true);
 
   readonly pressed = output<void>();
@@ -138,10 +135,6 @@ export class SwitchRow {
 
 let nextOptionSettingId = 0;
 
-/**
- * A short list of choices: a row that opens a dialog on small screens, and an
- * inline segmented control from `lg`, where a dialog would be a needless step.
- */
 @Component({
   selector: 'dt-option-setting',
   imports: [SingleLineSettingButton],
@@ -186,7 +179,6 @@ export class OptionSetting<T> {
   readonly options = input.required<readonly DialogOption<T>[]>();
   readonly selected = input.required<T>();
 
-  /** Asks the owner to open its dialog, on small screens. */
   readonly pressed = output<void>();
   readonly selectedChange = output<T>();
 

@@ -53,7 +53,6 @@ function weekIndexOf(date: Date): number {
         />
       }
 
-      <!-- Week navigation -->
       <div class="flex items-center gap-1">
         <button
           dt-icon-button
@@ -79,7 +78,6 @@ function weekIndexOf(date: Date): number {
         }
       </div>
 
-      <!-- Small screens show one day at a time; wide screens show the week board. -->
       <dt-day-selector
         class="fixed inset-x-4 bottom-21 z-10 mx-auto max-w-2xl lg:hidden"
         [dayName]="dayName()"
@@ -149,20 +147,16 @@ export class Tasks {
   protected today = this.clock.todayLabel;
   protected sheetLabels = TASK_SHEET_LABELS;
 
-  // On touch screens the hint talks about swiping
   protected deleteHint = window.matchMedia('(pointer: coarse)').matches
     ? STRINGS.hints.deleteTouch
     : STRINGS.hints.deletePointer;
   protected showHint = signal(true);
 
-  // Any date inside the week being shown
   private reference = signal(this.clock.now());
-  // Passing clock.now() makes "isToday" update by itself at midnight
   protected week = computed(() => weekOf(this.reference(), 'MONDAY', this.clock.now()));
   protected weekRange = computed(() => formatWeekRange(this.week()));
   protected isCurrentWeek = computed(() => this.week().some((d) => d.isToday));
 
-  // Index (0 = Monday) of the day shown on small screens. Starts on today.
   private day = signal(weekIndexOf(this.clock.now()));
   protected selectedDay = computed(() => this.week()[this.day()]);
   protected dayName = computed(() => `${this.selectedDay().label} ${this.selectedDay().date}`);
@@ -203,7 +197,6 @@ export class Tasks {
     this.day.set(weekIndexOf(now));
   }
 
-  // Going back from Monday or forward from Sunday changes the week
   protected moveDay(step: number) {
     const next = this.day() + step;
     if (next < 0) {
@@ -217,7 +210,6 @@ export class Tasks {
     }
   }
 
-  // Board actions first select the column's day, then reuse the list logic
   protected onBoardToggle(event: WeekBoardTaskEvent & { done: boolean }) {
     this.day.set(event.dayIndex);
     this.list.toggle(event.taskId, event.done);

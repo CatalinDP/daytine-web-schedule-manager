@@ -24,7 +24,6 @@ const BOX =
   'lg:h-12 lg:w-16 lg:text-title-large lg:font-normal ' +
   'focus:bg-primary-container focus:text-primary';
 
-// Two text boxes (hours and minutes) in 24h format
 @Component({
   selector: 'dt-time-input',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -75,8 +74,7 @@ export class TimeInput {
 
   private minuteBox = viewChild.required<ElementRef<HTMLInputElement>>('minuteBox');
 
-  // While a box has focus it shows exactly what was typed. If it showed the padded value,
-  // typing "1" would turn into "01" and, with maxlength 2, the next digit could not be added.
+  // Show the raw text while editing, otherwise "1" becomes "01" and blocks the second digit
   protected readonly editing = signal<Box | null>(null);
   private readonly typed = signal('');
 
@@ -91,7 +89,7 @@ export class TimeInput {
     const element = event.target as HTMLInputElement;
     this.typed.set(element.value);
     this.editing.set(box);
-    element.select(); // so typing replaces the old value
+    element.select();
   }
 
   protected onHourInput(event: Event) {
@@ -101,7 +99,6 @@ export class TimeInput {
     if (text === '' || isNaN(hour) || hour > 23) return;
 
     this.valueChange.emit({ ...this.value(), hour });
-    // When two digits are typed, jump to the minutes box
     if (text.length === 2) this.minuteBox().nativeElement.focus();
   }
 

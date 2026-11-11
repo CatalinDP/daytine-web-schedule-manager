@@ -23,7 +23,6 @@ import thunderstorm from '@material-symbols/svg-400/rounded/thunderstorm-fill.sv
 import umbrella from '@material-symbols/svg-400/rounded/umbrella-fill.svg';
 import wb_sunny from '@material-symbols/svg-400/rounded/wb_sunny-fill.svg';
 
-/** Per-icon imports keep only these glyphs in the bundle, not a multi-MB icon font. */
 const ICONS = {
   ac_unit,
   add_circle,
@@ -51,7 +50,6 @@ const ICONS = {
 
 export type IconName = keyof typeof ICONS;
 
-/** Decorative Material Symbol: the accessible name belongs to the parent control. */
 @Component({
   selector: 'dt-icon',
   changeDetection: ChangeDetectionStrategy.OnPush,

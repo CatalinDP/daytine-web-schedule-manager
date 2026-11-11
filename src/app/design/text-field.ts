@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, computed, input, output, signal } f
 
 let nextId = 0;
 
-/** Outlined field. The fieldset/legend pair cuts a real notch in the border for the label. */
 @Component({
   selector: 'dt-text-field',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -56,7 +55,6 @@ export class TextField {
   readonly error = input<string | null>(null);
   readonly type = input<'text' | 'email' | 'search'>('text');
   readonly autocomplete = input<string>();
-  /** Marks this field as the one a dialog focuses when it opens. */
   readonly initialFocus = input(false);
 
   readonly valueChange = output<string>();

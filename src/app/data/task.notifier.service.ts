@@ -58,7 +58,6 @@ export class TaskNotifierService {
   }
 
   private saveMarks(today: string): void {
-    // Keep only today's marks so the record doesn't grow forever
     const kept = [...this.sent].filter((m) => m.endsWith(`@${today}`));
     this.sent = new Set(kept);
     this.storage.write(SENT_KEY, kept);

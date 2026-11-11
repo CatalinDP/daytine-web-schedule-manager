@@ -1,3 +1,4 @@
+import { CURRENT_LOCALE } from './language';
 import { Day, DAY_BY_ID, DayInfo } from './task.model';
 
 const JS_DAY_TO_ID = [
@@ -20,11 +21,8 @@ export function dateKey(d: Date): string {
   return `${d.getFullYear()}-${month}-${day}`;
 }
 
-/** A day of a concrete week: its static info plus the calendar date it falls on. */
 export type WeekDay = DayInfo & {
-  /** Day of the month (1-31), for display only. */
   readonly date: number;
-  /** Full date as YYYY-MM-DD; unique across months and years. */
   readonly key: string;
   readonly isToday: boolean;
 };
@@ -35,7 +33,6 @@ export function startOfWeek(date: Date, weekStartsOn: Day = 'MONDAY'): Date {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate() - diff);
 }
 
-/** `now` is a parameter so tests can pin "today". */
 export function weekOf(
   reference: Date,
   weekStartsOn: Day = 'MONDAY',
@@ -55,18 +52,15 @@ export function weekOf(
     };
   });
 }
-// Same date moved `days` forward (or backward if negative)
 export function addDays(date: Date, days: number): Date {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate() + days);
 }
 
-// "lunes, 9 de noviembre"
-export function formatLongDate(date: Date, locale = 'es-ES'): string {
+export function formatLongDate(date: Date, locale = CURRENT_LOCALE): string {
   return date.toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long' });
 }
 
-// "9 nov - 15 nov"
-export function formatWeekRange(week: readonly WeekDay[], locale = 'es-ES'): string {
+export function formatWeekRange(week: readonly WeekDay[], locale = CURRENT_LOCALE): string {
   const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'short' };
   const first = new Date(week[0].key + 'T00:00');
   const last = new Date(week[week.length - 1].key + 'T00:00');

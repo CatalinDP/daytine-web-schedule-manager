@@ -1,9 +1,5 @@
 import { Directive, ElementRef, effect, inject, input, output } from '@angular/core';
 
-/**
- * Drives a native `<dialog>` from an `open` input. The owner decides when it
- * closes: Esc and backdrop clicks only report `dismissRequested`.
- */
 @Directive({
   selector: 'dialog[dtModal]',
   host: {
@@ -31,7 +27,6 @@ export class Modal {
     });
   }
 
-  /** Focus lands on a marked control, or else on the dialog itself, never on a time box. */
   private moveInitialFocus(): void {
     const target = this.dialog.querySelector<HTMLElement>('[data-dt-initial-focus]');
     (target ?? this.dialog).focus();

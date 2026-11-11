@@ -10,7 +10,6 @@ export class TaskService {
 
   tasks = signal<Task[]>(this.load());
 
-  // Last deleted task and its position, so "Undo" can put it back
   private lastDeleted: { task: Task; index: number } | null = null;
 
   add(task: Task) {
@@ -21,7 +20,6 @@ export class TaskService {
     this.setTasks(this.tasks().map((t) => (t.id === task.id ? task : t)));
   }
 
-  // Marks or unmarks the task as done on one date ("YYYY-MM-DD")
   toggle(id: string, dateKey: string, done: boolean) {
     this.setTasks(
       this.tasks().map((t) => {
@@ -52,8 +50,7 @@ export class TaskService {
     this.lastDeleted = null;
   }
 
-  // Tasks saved before `completedOn` existed had `done: boolean` instead.
-  // We give them an empty history so they are not thrown away.
+  // Old tasks had `done: boolean` instead of `completedOn`
   private load(): Task[] {
     const raw = this.storage.read(KEY, Array.isArray) ?? [];
     const tasks = raw.map((t) =>

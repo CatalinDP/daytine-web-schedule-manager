@@ -12,7 +12,6 @@
     line-height: var(--text-body-medium--line-height);
   }
 
-  /* Utilities can adjust the offset, e.g. inset rings inside clipped cards. */
   :focus-visible {
     outline: 2px solid var(--color-primary);
     outline-offset: 2px;

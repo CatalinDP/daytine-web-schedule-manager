@@ -19,7 +19,6 @@ import { TimeValue } from '../design/time';
     <main class="mx-auto flex max-w-5xl flex-col gap-4 p-6 lg:max-w-none lg:p-0">
       <p class="text-title-small text-primary lg:hidden">{{ strings.header(today()) }}</p>
 
-      <!-- From lg this is a split screen: brand panel on the left, form on the right. -->
       <div class="grid gap-4 md:grid-cols-2 md:items-start md:gap-8 lg:min-h-dvh lg:gap-0">
         <div
           class="flex h-[300px] flex-col items-center justify-center gap-4 rounded-lg bg-surface-variant p-4 lg:sticky lg:top-0 lg:h-dvh lg:rounded-none"
@@ -82,7 +81,6 @@ export class Welcome {
     this.profileService.user()?.start ?? { hour: 9, minute: 0 },
   );
   protected readonly name = signal(this.profileService.user()?.name ?? '');
-  // The error shows only after the first try, not while the user is still typing
   private readonly submitted = signal(false);
   protected readonly nameError = computed(() =>
     this.submitted() && this.name().trim().length < 2 ? this.strings.nameTooShort : null,

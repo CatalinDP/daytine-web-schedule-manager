@@ -2,18 +2,14 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 export interface WeeklyStatDay {
   readonly key: string;
-  /** Narrow label shown under the bar, e.g. "M". */
   readonly label: string;
-  /** Full description for assistive tech, e.g. "Monday: 50% done". */
   readonly accessibleLabel: string;
-  /** Completion from 0 to 1, or null when the day has no data. */
   readonly ratio: number | null;
   readonly isToday: boolean;
 }
 
 const MIN_BAR_RATIO = 0.12;
 
-/** Bar height as a percentage: clamped to 12-100, with null showing the minimum. */
 export function barHeightPercent(ratio: number | null): number {
   return Math.min(1, Math.max(MIN_BAR_RATIO, ratio ?? MIN_BAR_RATIO)) * 100;
 }
@@ -54,7 +50,6 @@ export function barHeightPercent(ratio: number | null): number {
 })
 export class WeeklyStatView {
   readonly days = input.required<readonly WeeklyStatDay[]>();
-  /** Heading shown from `lg`, where the chart sits in a rail without surrounding context. */
   readonly title = input<string>();
 
   protected readonly barHeight = barHeightPercent;

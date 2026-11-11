@@ -78,7 +78,6 @@ export interface DialogOption<T> {
   readonly label: string;
 }
 
-// List of options. Clicking one selects it and closes the dialog.
 @Component({
   selector: 'dt-option-dialog',
   imports: [AppDialog],
@@ -162,7 +161,6 @@ export class TextFieldDialog {
   readonly confirmed = output<string>();
   readonly cancelled = output<void>();
 
-  // Resets to `value` every time the dialog opens
   protected readonly draft = linkedSignal({ source: this.open, computation: () => this.value() });
   protected readonly trimmed = computed(() => this.draft().trim());
 
@@ -211,7 +209,6 @@ export class TimeInputDialog {
   readonly labels = input.required<TimeInputLabels>();
   readonly cancelLabel = input.required<string>();
   readonly confirmLabel = input.required<string>();
-  // Returns an error message, or null if the times are OK
   readonly validate = input<(values: readonly TimeValue[]) => string | null>(() => null);
 
   readonly confirmed = output<readonly TimeValue[]>();

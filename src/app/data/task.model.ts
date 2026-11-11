@@ -1,4 +1,5 @@
 import { TimeValue } from '../design/time';
+import { STRINGS } from '../mocks/strings';
 
 export interface Task {
   id: string;
@@ -13,22 +14,28 @@ export function isDoneOn(task: Task, dateKey: string): boolean {
   return task.completedOn.includes(dateKey);
 }
 
-export const DAYS = [
-  { id: 'SUNDAY', label: 'Domingo', short: 'Dom', narrow: 'D' },
-  { id: 'MONDAY', label: 'Lunes', short: 'Lun', narrow: 'L' },
-  { id: 'TUESDAY', label: 'Martes', short: 'Mar', narrow: 'M' },
-  { id: 'WEDNESDAY', label: 'Miércoles', short: 'Mié', narrow: 'X' },
-  { id: 'THURSDAY', label: 'Jueves', short: 'Jue', narrow: 'J' },
-  { id: 'FRIDAY', label: 'Viernes', short: 'Vie', narrow: 'V' },
-  { id: 'SATURDAY', label: 'Sábado', short: 'Sáb', narrow: 'S' },
+const DAY_IDS = [
+  'SUNDAY',
+  'MONDAY',
+  'TUESDAY',
+  'WEDNESDAY',
+  'THURSDAY',
+  'FRIDAY',
+  'SATURDAY',
 ] as const;
 
-export type DayInfo = (typeof DAYS)[number];
-export type Day = DayInfo['id'];
+export type Day = (typeof DAY_IDS)[number];
+
+export interface DayInfo {
+  readonly id: Day;
+  readonly label: string;
+  readonly short: string;
+  readonly narrow: string;
+}
+
+export const DAYS: readonly DayInfo[] = DAY_IDS.map((id) => ({ id, ...STRINGS.days[id] }));
 
 export const DAY_BY_ID = Object.fromEntries(DAYS.map((d) => [d.id, d])) as Record<Day, DayInfo>;
-
-// Validators for the data we read back from localStorage
 
 export function isTimeValue(v: unknown): v is TimeValue {
   if (typeof v !== 'object' || v === null) return false;

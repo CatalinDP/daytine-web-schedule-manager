@@ -2,7 +2,6 @@ import { inject, Injectable } from '@angular/core';
 import { TaskService } from './task.store';
 import { backupFileName, parseBackup, ParseResult, toBackup } from './backup.model';
 
-// Files bigger than this are rejected before reading them (years of data are well under 1 MB)
 export const MAX_BACKUP_BYTES = 1024 * 1024;
 
 export type ImportResult = ParseResult | { ok: false; error: 'too-big' | 'read-error' };
@@ -12,7 +11,6 @@ export type ImportError = Exclude<ImportResult, { ok: true }>['error'];
 export class BackupService {
   private tasks = inject(TaskService);
 
-  /** Downloads the current tasks as a .json file. */
   exportToFile(): void {
     const now = new Date();
     const backup = toBackup(this.tasks.tasks(), now);
@@ -26,10 +24,6 @@ export class BackupService {
     URL.revokeObjectURL(url);
   }
 
-  /**
-   * Reads a file chosen by the user and, if it is valid, replaces the current data.
-   * Returns the result so the screen can show a message.
-   */
   async importFromFile(file: File): Promise<ImportResult> {
     if (file.size > MAX_BACKUP_BYTES) {
       return { ok: false, error: 'too-big' };

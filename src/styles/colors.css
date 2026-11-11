@@ -1,8 +1,4 @@
-/*
- * Color roles. The dark values appear twice because a media query and an
- * attribute selector cannot share one rule: keep both dark blocks identical.
- * data-theme="light|dark" on <html> forces a theme; unset follows the system.
- */
+/* Keep both dark blocks identical: a media query and an attribute selector can't share a rule. */
 :root {
   color-scheme: light;
 
@@ -39,7 +35,6 @@
   --dt-error-container: #ffdad6;
   --dt-on-error-container: #410002;
 
-  /* Modal backdrop: reuses the darkest role of each theme, not a new color. */
   --dt-scrim: var(--dt-on-surface);
 
   --dt-shadow-card:

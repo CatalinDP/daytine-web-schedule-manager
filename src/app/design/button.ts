@@ -42,7 +42,6 @@ export class Button {
   });
 }
 
-/** Round icon-only button. Always give it an `aria-label`. */
 @Component({
   selector: 'button[dt-icon-button]',
   changeDetection: ChangeDetectionStrategy.OnPush,

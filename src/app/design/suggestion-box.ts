@@ -41,7 +41,6 @@ export class SuggestionBox {
   readonly title = input.required<string>();
   readonly label = input<string>();
   readonly actionLabel = input<string>();
-  /** Shows the close button when set. */
   readonly closeLabel = input<string>();
   readonly variant = input<SuggestionBoxVariant>('default');
 

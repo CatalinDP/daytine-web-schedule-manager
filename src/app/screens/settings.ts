@@ -24,13 +24,14 @@ import { ThemeMode, ThemeService } from '../theme/theme.service';
 import { ProfileService } from '../data/profile.store';
 import { BackupService, ImportError } from '../data/backup.service';
 import { NotificationService } from '../data/notifications.service';
+import { Language, LANGUAGE_NAMES, LANGUAGES, LanguageService } from '../data/language';
 
-type OpenDialog = 'theme' | 'interval' | 'window' | 'units' | 'name' | 'start' | 'import' | null;
+type OpenDialog =
+  'theme' | 'language' | 'interval' | 'window' | 'units' | 'name' | 'start' | 'import' | null;
 type Units = 'celsius' | 'fahrenheit';
 
 const S = STRINGS.settings;
 
-// On big screens the section title goes in a column on the left
 const SECTION =
   'flex flex-col gap-2 lg:grid lg:grid-cols-[13rem_minmax(0,1fr)] lg:gap-8 lg:border-t ' +
   'lg:border-outline-variant lg:py-6 lg:first-of-type:border-t-0 lg:first-of-type:pt-0';
@@ -40,6 +41,11 @@ const THEME_OPTIONS: readonly DialogOption<ThemeMode>[] = [
   { value: 'light', label: S.themeLight },
   { value: 'dark', label: S.themeDark },
 ];
+
+const LANGUAGE_OPTIONS: readonly DialogOption<Language>[] = LANGUAGES.map((value) => ({
+  value,
+  label: LANGUAGE_NAMES[value],
+}));
 
 const INTERVAL_OPTIONS: readonly DialogOption<number>[] = S.intervals.map((label, index) => ({
   value: index + 1,
@@ -51,7 +57,6 @@ const UNIT_OPTIONS: readonly DialogOption<Units>[] = [
   { value: 'fahrenheit', label: S.fahrenheit },
 ];
 
-// One message per import error. If a new error is added, this stops compiling until it has a text.
 const IMPORT_ERRORS: Record<ImportError, string> = {
   'too-big': S.importTooBig,
   'read-error': S.importReadError,
@@ -124,6 +129,13 @@ function labelOf<T>(options: readonly DialogOption<T>[], value: T): string {
             [selected]="theme.mode()"
             (pressed)="dialog.set('theme')"
             (selectedChange)="theme.setMode($event)"
+          />
+          <dt-option-setting
+            [label]="s.language"
+            [options]="languageOptions"
+            [selected]="language.current"
+            (pressed)="dialog.set('language')"
+            (selectedChange)="language.set($event)"
           />
         </dt-card-setting-container>
       </section>
@@ -207,7 +219,6 @@ function labelOf<T>(options: readonly DialogOption<T>[], value: T): string {
           <dt-single-line-setting-button [label]="s.exportFile" (pressed)="exportBackup()" />
           <dt-single-line-setting-button [label]="s.importFile" (pressed)="fileInput.click()" />
         </dt-card-setting-container>
-        <!-- Hidden: the "Import" row above opens it -->
         <input
           #fileInput
           type="file"
@@ -225,6 +236,15 @@ function labelOf<T>(options: readonly DialogOption<T>[], value: T): string {
       [options]="themeOptions"
       [value]="theme.mode()"
       (selected)="selectTheme($event)"
+      (cancelled)="dialog.set(null)"
+    />
+    <dt-option-dialog
+      [open]="dialog() === 'language'"
+      [title]="s.language"
+      [cancelLabel]="common.cancel"
+      [options]="languageOptions"
+      [value]="language.current"
+      (selected)="language.set($event); dialog.set(null)"
       (cancelled)="dialog.set(null)"
     />
     <dt-option-dialog
@@ -293,6 +313,7 @@ function labelOf<T>(options: readonly DialogOption<T>[], value: T): string {
 })
 export class Settings {
   protected readonly theme = inject(ThemeService);
+  protected readonly language = inject(LanguageService);
   private readonly profileService = inject(ProfileService);
   private readonly backupService = inject(BackupService);
   private readonly notifications = inject(NotificationService);
@@ -303,6 +324,7 @@ export class Settings {
   protected readonly timeLabels = STRINGS.time;
   protected readonly version = APP_VERSION;
   protected readonly themeOptions = THEME_OPTIONS;
+  protected readonly languageOptions = LANGUAGE_OPTIONS;
   protected readonly intervalOptions = INTERVAL_OPTIONS;
   protected readonly unitOptions = UNIT_OPTIONS;
 
@@ -320,7 +342,6 @@ export class Settings {
     { hour: 18, minute: 0 },
   ]);
 
-  // File chosen by the user, waiting for the confirmation dialog
   private readonly pendingFile = signal<File | null>(null);
 
   protected readonly notificationState = computed(() => {
@@ -329,7 +350,6 @@ export class Settings {
       this.notifications.permission()
     ];
   });
-  // Only an unanswered permission can be asked from the page; otherwise we explain how to change it
   protected readonly canAskNotifications = computed(
     () => this.notifications.supported && this.notifications.permission() === 'default',
   );
@@ -401,7 +421,6 @@ export class Settings {
   }
 
   protected async confirmImport(): Promise<void> {
-    // Read the file before clearing it
     const file = this.pendingFile();
     this.pendingFile.set(null);
     this.dialog.set(null);

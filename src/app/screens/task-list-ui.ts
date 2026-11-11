@@ -5,8 +5,6 @@ import { WeekDay } from '../data/day.model';
 import { TaskService } from '../data/task.store';
 import { STRINGS } from '../mocks/strings';
 
-// Shared logic for the task list in Home and Tasks (sheet, snackbar, actions).
-// Each screen creates its own instance with `new TaskListUi(day)`.
 export class TaskListUi {
   private taskService = inject(TaskService);
   private editingId = signal<string | null>(null);
@@ -17,7 +15,6 @@ export class TaskListUi {
   tasks = computed(() => this.tasksFor(this.day().id));
   editingTask = computed(() => this.tasks().find((t) => t.id === this.editingId()) ?? null);
 
-  // `day` is the date being shown: its weekday picks the tasks, its date the "done" state
   constructor(private day: Signal<WeekDay>) {}
 
   tasksFor(day: Day): Task[] {

@@ -40,7 +40,6 @@ function pathOf(url: string): string {
       [profile]="profile()"
     />
 
-    <!-- The bottom padding keeps the last content clear of the floating nav. -->
     <main
       #main
       class="px-6 pt-2 pb-28 outline-none lg:ml-60 lg:px-8 lg:pt-22 lg:pb-8"

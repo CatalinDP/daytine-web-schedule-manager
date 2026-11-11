@@ -4,7 +4,6 @@ export type ThemeMode = 'system' | 'light' | 'dark';
 
 const STORAGE_KEY = 'dt-theme';
 
-/** Holds the theme choice and mirrors it to `data-theme` on `<html>`. */
 @Injectable({ providedIn: 'root' })
 export class ThemeService {
   private readonly root = inject(DOCUMENT).documentElement;

@@ -6,7 +6,6 @@ import { Icon } from './icon';
 export interface WeekBoardTask {
   readonly id: string;
   readonly name: string;
-  /** Start time. The full range lives in the edit form. */
   readonly time: string;
   readonly done: boolean;
 }
@@ -25,7 +24,6 @@ export interface WeekBoardTaskEvent {
   readonly taskId: string;
 }
 
-/** The whole week in seven columns, for screens wide enough to show it. */
 @Component({
   selector: 'dt-week-board',
   imports: [Icon, IconButton],
@@ -110,9 +108,7 @@ export interface WeekBoardTaskEvent {
 })
 export class WeekBoard {
   readonly days = input.required<readonly WeekBoardDay[]>();
-  /** Short visible text of each column's add button. */
   readonly addText = input.required<string>();
-  /** Accessible name of a column's add button, from the day label. */
   readonly addLabel = input.required<(day: string) => string>();
   readonly deleteLabel = input.required<(name: string) => string>();
 

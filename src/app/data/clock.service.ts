@@ -15,7 +15,6 @@ export class ClockService {
   });
 
   constructor() {
-    // First tick lined up with the next minute change, then every 30 s
     const msToNextMinute = 60_000 - (Date.now() % 60_000);
     let interval: ReturnType<typeof setInterval>;
 

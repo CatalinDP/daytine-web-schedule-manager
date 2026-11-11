@@ -52,7 +52,6 @@ const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
   `,
 })
 export class TaskCompletionStat {
-  /** Whole number from 0 to 100. */
   readonly percent = input.required<number>();
   readonly label = input.required<string>();
   readonly summary = input.required<string>();

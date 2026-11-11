@@ -9,7 +9,6 @@ const PINNED =
   'lg:fixed lg:inset-x-0 lg:top-0 lg:z-20 lg:h-16 lg:border-b lg:border-outline-variant ' +
   'lg:pr-8 lg:pl-5';
 
-/** Screen header. Project trailing actions as content. */
 @Component({
   selector: 'dt-app-top-bar',
   imports: [Icon, IconButton],
@@ -20,7 +19,6 @@ const PINNED =
   },
   template: `
     @if (brand(); as brand) {
-      <!-- Same width as the sidebar, so the heading lines up with the page content. -->
       <div class="mr-4 hidden w-55 shrink-0 items-center gap-3 px-2 lg:flex">
         <img class="size-8 rounded-sm" src="logo.svg" alt="" width="32" height="32" />
         <span class="text-title-medium text-on-surface">{{ brand }}</span>
@@ -50,11 +48,8 @@ const PINNED =
 export class AppTopBar {
   readonly label = input.required<string>();
   readonly title = input.required<string>();
-  /** Which line becomes the page heading from `lg`. The other one turns into a subtitle. */
   readonly desktopHeading = input<'label' | 'title'>('label');
-  /** Shows the back button when set. */
   readonly backLabel = input<string>();
-  /** Pins the bar across the top of the app from `lg`, led by the brand. */
   readonly brand = input<string>();
 
   readonly back = output<void>();

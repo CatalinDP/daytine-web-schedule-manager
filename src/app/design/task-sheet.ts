@@ -29,7 +29,6 @@ export interface TaskSheetLabels {
 
 let nextId = 0;
 
-// Form to create or edit a task. Bottom sheet on mobile, centered dialog on bigger screens.
 @Component({
   selector: 'dt-task-sheet',
   imports: [Button, DayPicker, Modal, TextField, TimeInput],
@@ -113,7 +112,6 @@ export class TaskSheet {
 
   protected readonly titleId = `dt-task-sheet-title-${nextId++}`;
 
-  // Resets the form every time the sheet opens
   protected readonly draft = linkedSignal({
     source: this.open,
     computation: () => this.task() ?? this.emptyTask(),

@@ -2,16 +2,8 @@ import { TimeValue } from '../design/time';
 import { dateKey } from './day.model';
 import { Day, isTaskList, Task } from './task.model';
 
-/**
- * Backup file format, shared by the web and the Android app.
- *
- * Field names and values are chosen to map 1:1 to Kotlin types:
- * - days        -> java.time.DayOfWeek names ("MONDAY")
- * - start / end -> LocalTime (hour, minute)
- * - completedOn -> LocalDate ISO strings ("2026-11-09")
- *
- * Increase BACKUP_VERSION whenever the format changes in a way old readers can't handle.
- */
+// Shared with the Android app: fields map to DayOfWeek, LocalTime and LocalDate.
+// Bump BACKUP_VERSION when old readers can't handle a format change.
 export const BACKUP_VERSION = 1;
 export const BACKUP_APP_ID = 'daytine';
 
@@ -27,7 +19,7 @@ export interface BackupTask {
 export interface BackupFile {
   app: typeof BACKUP_APP_ID;
   version: number;
-  exportedAt: string; // ISO date-time, e.g. "2026-11-09T18:30:00.000Z"
+  exportedAt: string;
   tasks: BackupTask[];
 }
 
@@ -38,10 +30,6 @@ export type ParseResult =
       error: 'invalid-json' | 'not-a-backup' | 'newer-version' | 'invalid-data' | 'read-error';
     };
 
-/**
- * Builds the object that will be written to the file.
- * Copy only the known fields, so nothing extra (or private) ends up in the backup.
- */
 export function toBackup(tasks: Task[], now: Date): BackupFile {
   const backUpTasks = tasks.map((t) => {
     return toBackupTask(t);
@@ -54,10 +42,6 @@ export function toBackup(tasks: Task[], now: Date): BackupFile {
   };
 }
 
-/**
- * Reads the text of a file chosen by the user. The file is untrusted:
- * never assume a field exists or has the right type.
- */
 export function parseBackup(text: string): ParseResult {
   let data: unknown;
   try {
@@ -98,7 +82,6 @@ function toBackupTask(t: Task): BackupTask {
   };
 }
 
-/** "daytine-backup-2026-11-09.json" */
 export function backupFileName(now: Date): string {
   // The version is inside the file, and ':' is not allowed in Windows file names
   return `daytine-backup-${dateKey(now)}.json`;

@@ -16,7 +16,6 @@ const SIDEBAR_ITEM =
 const PILL_SELECTED = 'bg-primary-container text-on-primary-container';
 const PILL_UNSELECTED = 'text-on-surface-variant hover:bg-current/10';
 
-/** Floating bar for small screens. The label collapses but stays readable by screen readers. */
 @Component({
   selector: 'dt-nav-bar',
   imports: [Icon, RouterLink],
@@ -102,8 +101,6 @@ export class NavSidebar {
   readonly items = input.required<readonly NavItem[]>();
   readonly selected = input.required<string>();
   readonly ariaLabel = input.required<string>();
-  /** Omit when the brand already shows in the top bar. */
   readonly brand = input<string>();
-  /** Shows the signed-in user at the bottom when set. */
   readonly profile = input<{ readonly name: string; readonly route: string }>();
 }

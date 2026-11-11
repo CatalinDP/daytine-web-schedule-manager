@@ -160,11 +160,9 @@ export class Home {
   protected emptyTask = computed(() => ({ ...EMPTY_TASK, days: [this.clock.todayId()] }));
   protected sheetLabels = TASK_SHEET_LABELS;
 
-  // Home always shows today's tasks (it changes by itself at midnight)
   private todayInWeek = computed(() => this.week().find((d) => d.isToday)!);
   protected list = new TaskListUi(this.todayInWeek);
 
-  // Part of each day's tasks that was completed. Future days and days without tasks show no data.
   protected weeklyStats = computed(() => {
     const todayKey = this.todayInWeek().key;
     return this.week().map((day) => {

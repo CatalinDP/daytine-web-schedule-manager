@@ -79,9 +79,7 @@ export class TaskItem {
   readonly timeRange = input.required<string>();
   readonly deleteLabel = input.required<string>();
   readonly checked = input(false);
-  /** Tasks can only be checked off on the day they belong to. */
   readonly isToday = input(true);
-  /** From `lg`, drops the card look so rows can sit together in a table-like panel. */
   readonly tableRow = input(false);
 
   readonly checkedChange = output<boolean>();

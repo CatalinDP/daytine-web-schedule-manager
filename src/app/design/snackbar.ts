@@ -4,10 +4,7 @@ import { Button } from './button';
 
 const DEFAULT_DURATION_MS = 6000;
 
-/**
- * The host stays in the DOM while empty, because screen readers only announce
- * changes inside a live region that already exists.
- */
+// Stays in the DOM while empty: screen readers only announce changes in an existing live region
 @Component({
   selector: 'dt-snackbar',
   imports: [Button],
@@ -43,11 +40,8 @@ const DEFAULT_DURATION_MS = 6000;
 export class Snackbar {
   readonly message = input<string | null>(null);
   readonly actionLabel = input<string>();
-  /** False renders in place, for previews. */
   readonly floating = input(true);
-  /** Clears a control fixed above the nav bar on small screens. */
   readonly lifted = input(false);
-  /** Time before `dismissed` fires. Zero keeps it open. */
   readonly duration = input(DEFAULT_DURATION_MS);
 
   readonly action = output<void>();

@@ -11,7 +11,6 @@ export class NotificationService {
 
   async request(): Promise<boolean> {
     if (!this.supported) return false;
-    // The browser only shows the prompt once; after that it returns the saved answer
     if (this._permission() !== 'default') return this.granted();
     try {
       const r = await Notification.requestPermission();
