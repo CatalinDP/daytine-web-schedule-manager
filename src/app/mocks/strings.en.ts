@@ -15,7 +15,7 @@ export const EN = {
     tasks: 'Tasks',
     settings: 'Settings',
   },
-  time: { hour: 'Hour', minute: 'Minute' },
+  time: { hour: 'Hour', minute: 'Minute', hourUnit: 'h', minuteUnit: 'min' },
   days: {
     SUNDAY: { label: 'Sunday', short: 'Sun', narrow: 'S' },
     MONDAY: { label: 'Monday', short: 'Mon', narrow: 'M' },

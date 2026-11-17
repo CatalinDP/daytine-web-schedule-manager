@@ -8,6 +8,7 @@ export interface WeekBoardTask {
   readonly name: string;
   readonly time: string;
   readonly done: boolean;
+  readonly duration: string;
 }
 
 export interface WeekBoardDay {
@@ -59,6 +60,11 @@ export interface WeekBoardTaskEvent {
                 <span class="block pl-7 text-label-medium text-on-surface-variant">
                   {{ task.time }}
                 </span>
+                @if (task.duration) {
+                  <span class="block pl-7 text-label-medium text-on-surface-variant">{{
+                    task.duration
+                  }}</span>
+                }
                 <span class="mt-2 block text-label-large text-on-surface">{{ task.name }}</span>
               </button>
 

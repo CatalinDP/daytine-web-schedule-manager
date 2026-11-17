@@ -59,7 +59,12 @@ let nextId = 0;
         (click)="edit.emit()"
       >
         <span [id]="nameId" class="text-label-large">{{ name() }}</span>
-        <span class="text-label-medium text-on-surface-variant">{{ timeRange() }}</span>
+        <span class="text-label-medium text-on-surface-variant">
+          {{ timeRange() }}
+          @if (taskDuration()) {
+            <span aria-hidden="true"> · </span>{{ taskDuration() }}
+          }
+        </span>
       </button>
 
       <button
@@ -77,6 +82,7 @@ let nextId = 0;
 export class TaskItem {
   readonly name = input.required<string>();
   readonly timeRange = input.required<string>();
+  readonly taskDuration = input.required<string>();
   readonly deleteLabel = input.required<string>();
   readonly checked = input(false);
   readonly isToday = input(true);
