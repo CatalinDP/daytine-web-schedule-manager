@@ -8,7 +8,7 @@ import { HintBox } from '../design/hint-box';
 import { Snackbar } from '../design/snackbar';
 import { TaskItem } from '../design/task-item';
 import { TaskSheet } from '../design/task-sheet';
-import { formatTime, formatTimeRange, toMinutes } from '../design/time';
+import { formatTime, formatTimeDuration, formatTimeRange, toMinutes } from '../design/time';
 import { WeekBoard, WeekBoardTaskEvent } from '../design/week-board';
 import { EMPTY_TASK, TASK_SHEET_LABELS } from '../mocks/mock-data';
 import { STRINGS } from '../mocks/strings';
@@ -92,6 +92,7 @@ function weekIndexOf(date: Date): number {
           <dt-task-item
             [name]="task.name"
             [timeRange]="timeRange(task)"
+            [taskDuration]="formatTimeDuration(task)"
             [checked]="list.isDone(task)"
             [isToday]="selectedDay().isToday"
             [deleteLabel]="strings.tasks.delete(task.name)"
@@ -179,12 +180,22 @@ export class Tasks {
           name: task.name,
           time: formatTime(task.start),
           done: isDoneOn(task, day.key),
+          duration: this.formatTimeDuration(task),
         })),
     })),
   );
 
   protected timeRange(task: Task) {
     return formatTimeRange(task.start, task.end);
+  }
+
+  protected formatTimeDuration(task: Task) {
+    return formatTimeDuration(
+      task.start,
+      task.end,
+      this.strings.time.hourUnit,
+      this.strings.time.minuteUnit,
+    );
   }
 
   protected moveWeek(delta: number) {

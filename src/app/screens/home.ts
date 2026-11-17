@@ -9,7 +9,7 @@ import { SuggestionBox } from '../design/suggestion-box';
 import { TaskCompletionStat } from '../design/task-completion-stat';
 import { TaskItem } from '../design/task-item';
 import { TaskSheet } from '../design/task-sheet';
-import { formatTimeRange } from '../design/time';
+import { formatTimeDuration, formatTimeRange } from '../design/time';
 import { Weather } from '../design/weather';
 import { WeeklyStatView } from '../design/weekly-stat-view';
 import {
@@ -112,6 +112,7 @@ import { Task, isDoneOn } from '../data/task.model';
                 [tableRow]="true"
                 [name]="task.name"
                 [timeRange]="timeRange(task)"
+                [taskDuration]="formatTimeDuration(task)"
                 [checked]="list.isDone(task)"
                 [deleteLabel]="strings.tasks.delete(task.name)"
                 (checkedChange)="list.toggle(task.id, $event)"
@@ -193,6 +194,15 @@ export class Home {
 
   protected timeRange(task: Task) {
     return formatTimeRange(task.start, task.end);
+  }
+
+  protected formatTimeDuration(task: Task) {
+    return formatTimeDuration(
+      task.start,
+      task.end,
+      this.strings.time.hourUnit,
+      this.strings.time.minuteUnit,
+    );
   }
 
   protected nextHint() {

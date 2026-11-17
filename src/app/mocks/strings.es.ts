@@ -17,7 +17,7 @@ export const ES: Strings = {
     tasks: 'Tareas',
     settings: 'Ajustes',
   },
-  time: { hour: 'Hora', minute: 'Minuto' },
+  time: { hour: 'Hora', minute: 'Minuto', hourUnit: 'h', minuteUnit: 'min' },
   days: {
     SUNDAY: { label: 'Domingo', short: 'Dom', narrow: 'D' },
     MONDAY: { label: 'Lunes', short: 'Lun', narrow: 'L' },

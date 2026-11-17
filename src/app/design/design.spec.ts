@@ -76,8 +76,12 @@ describe('WeeklyStatView', () => {
 });
 
 describe('TaskItem', () => {
-  const inputs = { name: 'Read', timeRange: '22:00 - 22:30', deleteLabel: 'Delete Read' };
-
+  const inputs = {
+    name: 'Read',
+    timeRange: '22:00 - 22:30',
+    taskDuration: '30 min',
+    deleteLabel: 'Delete Read',
+  };
   it('keeps interactive elements as siblings, never nested', async () => {
     const { host } = await render(TaskItem, inputs);
 
@@ -115,6 +119,16 @@ describe('TaskItem', () => {
     const { host } = await render(TaskItem, { ...inputs, isToday: false });
 
     expect(query<HTMLInputElement>(host, 'input').disabled).toBe(true);
+  });
+
+  it('shows the duration next to the time range', async () => {
+    const { host } = await render(TaskItem, inputs);
+    expect(host.textContent).toContain('30 min');
+  });
+
+  it('hides the separator when there is no duration', async () => {
+    const { host } = await render(TaskItem, { ...inputs, taskDuration: '' });
+    expect(host.textContent).not.toContain('·');
   });
 });
 
