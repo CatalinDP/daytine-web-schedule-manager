@@ -189,11 +189,14 @@ export class Tasks {
     return formatTimeRange(task.start, task.end);
   }
 
-  protected formatTimeDuration(task: Task) { return formatTimeDuration(
+  protected formatTimeDuration(task: Task) {
+    return formatTimeDuration(
       task.start,
       task.end,
       this.strings.time.hourUnit,
-      this.strings.time.minuteUnit,)}
+      this.strings.time.minuteUnit,
+    );
+  }
 
   protected moveWeek(delta: number) {
     this.reference.set(addDays(this.reference(), delta * 7));
