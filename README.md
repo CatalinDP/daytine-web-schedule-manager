@@ -55,7 +55,7 @@ Then open http://localhost:4200.
 | `npm start`            | Dev server with live reload               |
 | `npm test`             | Unit and component tests (Vitest)         |
 | `npm run lint`         | ESLint                                    |
-| `npm run format`       | Format the code with Prettier             |
+| `npm run format`       | Format every file with Prettier           |
 | `npm run format:check` | Check the formatting without changing it  |
 | `npm run build`        | Production build into `dist/daytine-web/` |
 
@@ -78,6 +78,15 @@ npm run build
 ```
 
 If the formatting check fails, run `npm run format` and commit the result.
+
+### Formatting on your machine
+
+You rarely need to run Prettier by hand:
+
+- **On save:** the workspace settings in `.vscode/` make VS Code format every file with Prettier when you save it. Install the recommended [Prettier extension](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) when VS Code suggests it.
+- **On commit:** a [husky](https://typicode.github.io/husky/) `pre-commit` hook runs [lint-staged](https://github.com/lint-staged/lint-staged), which formats the staged files before the commit is created. `npm install` / `npm ci` set the hook up automatically.
+
+CI still checks the formatting, so a commit made with `--no-verify` is caught there.
 
 ## Project structure
 
