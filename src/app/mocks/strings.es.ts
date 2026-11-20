@@ -70,6 +70,7 @@ export const ES: Strings = {
     empty: 'No hay tareas creadas',
     deleted: (name: string) => `${name} eliminada`,
     delete: (name: string) => `Eliminar ${name}`,
+    overnight: 'Termina al día siguiente',
     previousDay: 'Día anterior',
     nextDay: 'Día siguiente',
     previousWeek: 'Semana anterior',

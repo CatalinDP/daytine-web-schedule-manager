@@ -26,6 +26,12 @@ export function getTimeDuration(start: TimeValue, end: TimeValue): number {
   return totalMinutes;
 }
 
+export function isOvernightTask(start: TimeValue, end: TimeValue): boolean {
+  const endInMinutes = toMinutes(end);
+  // 00:00 does not count as an overnight task since it's finished without having a relevant impact on the next day
+  return endInMinutes < toMinutes(start) && endInMinutes !== 0;
+}
+
 export function formatTimeDuration(
   start: TimeValue,
   end: TimeValue,

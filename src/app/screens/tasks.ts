@@ -8,12 +8,13 @@ import { HintBox } from '../design/hint-box';
 import { Snackbar } from '../design/snackbar';
 import { TaskItem } from '../design/task-item';
 import { TaskSheet } from '../design/task-sheet';
-import { formatTime, formatTimeDuration, formatTimeRange, toMinutes } from '../design/time';
+import { formatTime, formatTimeDuration, isOvernightTask, toMinutes } from '../design/time';
 import { WeekBoard, WeekBoardTaskEvent } from '../design/week-board';
+import { TimeDurationPipe, TimeRangePipe } from '../design/time-pipes';
 import { EMPTY_TASK, TASK_SHEET_LABELS } from '../mocks/mock-data';
 import { STRINGS } from '../mocks/strings';
 import { TaskListUi } from './task-list-ui';
-import { Task, isDoneOn } from '../data/task.model';
+import { isDoneOn } from '../data/task.model';
 import { ClockService } from '../data/clock.service';
 import { addDays, formatWeekRange, weekOf } from '../data/day.model';
 
@@ -36,6 +37,8 @@ function weekIndexOf(date: Date): number {
     TaskItem,
     TaskSheet,
     WeekBoard,
+    TimeDurationPipe,
+    TimeRangePipe,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -91,11 +94,14 @@ function weekIndexOf(date: Date): number {
         @for (task of list.tasks(); track task.id) {
           <dt-task-item
             [name]="task.name"
-            [timeRange]="timeRange(task)"
-            [taskDuration]="formatTimeDuration(task)"
+            [timeRange]="task.start | timeRange: task.end"
+            [taskDuration]="task.start | timeDuration: task.end"
             [checked]="list.isDone(task)"
             [isToday]="selectedDay().isToday"
             [deleteLabel]="strings.tasks.delete(task.name)"
+            [start]="task.start"
+            [end]="task.end"
+            [overnightLabel]="strings.tasks.overnight"
             (checkedChange)="list.toggle(task.id, $event)"
             (edit)="list.openEdit(task.id)"
             (delete)="list.remove(task.id)"
@@ -114,6 +120,7 @@ function weekIndexOf(date: Date): number {
         [addText]="strings.tasks.boardAdd"
         [addLabel]="strings.tasks.addToDay"
         [deleteLabel]="strings.tasks.delete"
+        [overnightLabel]="strings.tasks.overnight"
         (toggled)="onBoardToggle($event)"
         (edit)="onBoardEdit($event)"
         (delete)="onBoardDelete($event)"
@@ -180,23 +187,16 @@ export class Tasks {
           name: task.name,
           time: formatTime(task.start),
           done: isDoneOn(task, day.key),
-          duration: this.formatTimeDuration(task),
+          duration: formatTimeDuration(
+            task.start,
+            task.end,
+            this.strings.time.hourUnit,
+            this.strings.time.minuteUnit,
+          ),
+          isOvernight: isOvernightTask(task.start, task.end),
         })),
     })),
   );
-
-  protected timeRange(task: Task) {
-    return formatTimeRange(task.start, task.end);
-  }
-
-  protected formatTimeDuration(task: Task) {
-    return formatTimeDuration(
-      task.start,
-      task.end,
-      this.strings.time.hourUnit,
-      this.strings.time.minuteUnit,
-    );
-  }
 
   protected moveWeek(delta: number) {
     this.reference.set(addDays(this.reference(), delta * 7));

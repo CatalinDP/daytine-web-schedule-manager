@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
 
 import { IconButton } from './button';
 import { Icon } from './icon';
+import { isOvernightTask, TimeValue } from './time';
 
 const SWIPE_DELETE_DISTANCE_PX = 96;
 const SWIPE_START_SLOP_PX = 8;
@@ -52,17 +53,25 @@ let nextId = 0;
           }
         </span>
       </span>
-
       <button
         type="button"
         class="flex min-h-14 min-w-0 flex-1 flex-col justify-center rounded-md py-1 pr-2 text-left text-on-surface lg:min-h-11 lg:flex-row lg:flex-wrap lg:items-center lg:justify-between lg:gap-x-4"
         (click)="edit.emit()"
       >
         <span [id]="nameId" class="text-label-large">{{ name() }}</span>
-        <span class="text-label-medium text-on-surface-variant">
+        <span class="inline-flex items-center gap-1 text-label-medium text-on-surface-variant">
           {{ timeRange() }}
           @if (taskDuration()) {
             <span aria-hidden="true"> · </span>{{ taskDuration() }}
+          }
+          @if (isOvernight()) {
+            <dt-icon
+              [attr.title]="overnightLabel()"
+              class="text-primary"
+              name="moon_stars"
+              [size]="16"
+            />
+            <span class="sr-only">{{ overnightLabel() }}</span>
           }
         </span>
       </button>
@@ -84,9 +93,12 @@ export class TaskItem {
   readonly timeRange = input.required<string>();
   readonly taskDuration = input.required<string>();
   readonly deleteLabel = input.required<string>();
+  readonly start = input.required<TimeValue>();
+  readonly end = input.required<TimeValue>();
   readonly checked = input(false);
   readonly isToday = input(true);
   readonly tableRow = input(false);
+  readonly overnightLabel = input.required<string>();
 
   readonly checkedChange = output<boolean>();
   readonly edit = output<void>();
@@ -96,6 +108,8 @@ export class TaskItem {
   protected readonly dragX = signal(0);
 
   private swipeStartX: number | null = null;
+
+  protected readonly isOvernight = computed(() => isOvernightTask(this.start(), this.end()));
 
   protected onCheckedChange(event: Event): void {
     this.checkedChange.emit((event.target as HTMLInputElement).checked);

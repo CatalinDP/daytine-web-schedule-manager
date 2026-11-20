@@ -67,6 +67,7 @@ export const EN = {
     empty: 'No tasks created',
     deleted: (name: string) => `${name} deleted`,
     delete: (name: string) => `Delete ${name}`,
+    overnight: 'Ends the next day',
     previousDay: 'Previous day',
     nextDay: 'Next day',
     previousWeek: 'Previous week',
