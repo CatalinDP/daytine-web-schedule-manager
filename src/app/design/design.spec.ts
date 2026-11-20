@@ -81,6 +81,9 @@ describe('TaskItem', () => {
     timeRange: '22:00 - 22:30',
     taskDuration: '30 min',
     deleteLabel: 'Delete Read',
+    overnightLabel: 'Ends the next day',
+    start: { hour: 22, minute: 0 },
+    end: { hour: 22, minute: 30 },
   };
   it('keeps interactive elements as siblings, never nested', async () => {
     const { host } = await render(TaskItem, inputs);
@@ -129,6 +132,34 @@ describe('TaskItem', () => {
   it('hides the separator when there is no duration', async () => {
     const { host } = await render(TaskItem, { ...inputs, taskDuration: '' });
     expect(host.textContent).not.toContain('·');
+  });
+
+  it('shows a tooltip on overnight tasks', async () => {
+    const { host } = await render(TaskItem, {
+      ...inputs,
+      start: { hour: 23, minute: 0 },
+      end: { hour: 3, minute: 0 },
+    });
+    expect(query(host, 'dt-icon').getAttribute('title')).toBe('Ends the next day');
+  });
+
+  it('announces overnight tasks to screen readers', async () => {
+    const { host } = await render(TaskItem, {
+      ...inputs,
+      start: { hour: 23, minute: 0 },
+      end: { hour: 3, minute: 0 },
+    });
+    expect(host.textContent).toContain('Ends the next day');
+  });
+
+  it('announces nothing extra for same-day tasks', async () => {
+    const { host } = await render(TaskItem, inputs);
+    expect(host.textContent).not.toContain('Ends the next day');
+  });
+
+  it('has no tooltip on same-day tasks', async () => {
+    const { host } = await render(TaskItem, inputs);
+    expect(host.querySelector('dt-icon[title]')).toBeNull();
   });
 });
 
@@ -180,7 +211,7 @@ describe('OptionSetting', () => {
 });
 
 describe('WeekBoard', () => {
-  const task = { id: 'read', name: 'Read', time: '22:00', done: false };
+  const task = { id: 'read', name: 'Read', time: '22:00', done: false, isOvernight: false };
   const day = { key: 'mon', label: 'Monday', shortLabel: 'Mon', date: 2, tasks: [task] };
   const inputs = {
     days: [
@@ -190,6 +221,7 @@ describe('WeekBoard', () => {
     addText: 'Add',
     addLabel: (name: string) => `Add task on ${name}`,
     deleteLabel: (name: string) => `Delete ${name}`,
+    overnightLabel: 'Ends the next day',
   };
 
   it('only enables checkboxes on today', async () => {
@@ -222,6 +254,32 @@ describe('WeekBoard', () => {
     expect(toggled).toHaveBeenCalledWith({ dayIndex: 1, taskId: 'read', done: true });
     expect(added).toHaveBeenCalledWith(1);
     expect(deleted).toHaveBeenCalledWith({ dayIndex: 0, taskId: 'read' });
+  });
+
+  it('shows a tooltip on overnight tasks', async () => {
+    const { host } = await render(WeekBoard, {
+      ...inputs,
+      days: [{ ...day, isToday: false, tasks: [{ ...task, isOvernight: true }] }],
+    });
+    expect(query(host, 'dt-icon').getAttribute('title')).toBe('Ends the next day');
+  });
+
+  it('has no tooltip on same-day tasks', async () => {
+    const { host } = await render(WeekBoard, inputs);
+    expect(host.querySelector('dt-icon[title]')).toBeNull();
+  });
+
+  it('announces overnight tasks to screen readers', async () => {
+    const { host } = await render(WeekBoard, {
+      ...inputs,
+      days: [{ ...day, isToday: false, tasks: [{ ...task, isOvernight: true }] }],
+    });
+    expect(host.textContent).toContain('Ends the next day');
+  });
+
+  it('announces nothing extra for same-day tasks', async () => {
+    const { host } = await render(WeekBoard, inputs);
+    expect(host.textContent).not.toContain('Ends the next day');
   });
 });
 

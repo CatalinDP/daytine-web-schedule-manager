@@ -15,6 +15,7 @@ import home from '@material-symbols/svg-400/rounded/home-fill.svg';
 import lightbulb from '@material-symbols/svg-400/outlined/lightbulb.svg';
 import local_fire_department from '@material-symbols/svg-400/outlined/local_fire_department.svg';
 import location_on from '@material-symbols/svg-400/outlined/location_on.svg';
+import moon_stars from '@material-symbols/svg-400/rounded/moon_stars-fill.svg';
 import notifications_active from '@material-symbols/svg-400/outlined/notifications_active.svg';
 import partly_cloudy_day from '@material-symbols/svg-400/rounded/partly_cloudy_day-fill.svg';
 import settings from '@material-symbols/svg-400/rounded/settings-fill.svg';
@@ -38,6 +39,7 @@ const ICONS = {
   lightbulb,
   local_fire_department,
   location_on,
+  moon_stars,
   notifications_active,
   settings,
   task,

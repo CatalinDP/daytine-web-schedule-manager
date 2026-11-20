@@ -9,9 +9,9 @@ import { SuggestionBox } from '../design/suggestion-box';
 import { TaskCompletionStat } from '../design/task-completion-stat';
 import { TaskItem } from '../design/task-item';
 import { TaskSheet } from '../design/task-sheet';
-import { formatTimeDuration, formatTimeRange } from '../design/time';
 import { Weather } from '../design/weather';
 import { WeeklyStatView } from '../design/weekly-stat-view';
+import { TimeDurationPipe, TimeRangePipe } from '../design/time-pipes';
 import {
   EMPTY_TASK,
   HOME_HINTS,
@@ -24,7 +24,7 @@ import { TaskListUi } from './task-list-ui';
 import { ProfileService } from '../data/profile.store';
 import { weekOf } from '../data/day.model';
 import { ClockService } from '../data/clock.service';
-import { Task, isDoneOn } from '../data/task.model';
+import { isDoneOn } from '../data/task.model';
 
 @Component({
   selector: 'dt-home',
@@ -41,6 +41,8 @@ import { Task, isDoneOn } from '../data/task.model';
     TaskSheet,
     Weather,
     WeeklyStatView,
+    TimeDurationPipe,
+    TimeRangePipe,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -111,10 +113,13 @@ import { Task, isDoneOn } from '../data/task.model';
               <dt-task-item
                 [tableRow]="true"
                 [name]="task.name"
-                [timeRange]="timeRange(task)"
-                [taskDuration]="formatTimeDuration(task)"
+                [timeRange]="task.start | timeRange: task.end"
+                [taskDuration]="task.start | timeDuration: task.end"
                 [checked]="list.isDone(task)"
                 [deleteLabel]="strings.tasks.delete(task.name)"
+                [start]="task.start"
+                [end]="task.end"
+                [overnightLabel]="strings.tasks.overnight"
                 (checkedChange)="list.toggle(task.id, $event)"
                 (edit)="list.openEdit(task.id)"
                 (delete)="list.remove(task.id)"
@@ -191,19 +196,6 @@ export class Home {
     const total = this.list.tasks().length;
     return total === 0 ? 0 : Math.round((this.doneCount() / total) * 100);
   });
-
-  protected timeRange(task: Task) {
-    return formatTimeRange(task.start, task.end);
-  }
-
-  protected formatTimeDuration(task: Task) {
-    return formatTimeDuration(
-      task.start,
-      task.end,
-      this.strings.time.hourUnit,
-      this.strings.time.minuteUnit,
-    );
-  }
 
   protected nextHint() {
     this.hintIndex.set(this.hintIndex() + 1);

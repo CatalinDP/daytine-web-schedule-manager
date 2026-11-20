@@ -9,6 +9,7 @@ export interface WeekBoardTask {
   readonly time: string;
   readonly done: boolean;
   readonly duration: string;
+  readonly isOvernight: boolean;
 }
 
 export interface WeekBoardDay {
@@ -57,8 +58,19 @@ export interface WeekBoardTaskEvent {
                 class="block w-full rounded-md px-2 pt-3 pb-2 text-left focus-visible:-outline-offset-2"
                 (click)="edit.emit({ dayIndex, taskId: task.id })"
               >
-                <span class="block pl-7 text-label-medium text-on-surface-variant">
+                <span
+                  class="flex items-center gap-1 pl-7 text-label-medium text-on-surface-variant"
+                >
                   {{ task.time }}
+                  @if (task.isOvernight) {
+                    <dt-icon
+                      [attr.title]="overnightLabel()"
+                      class="text-primary"
+                      name="moon_stars"
+                      [size]="14"
+                    />
+                    <span class="sr-only">{{ overnightLabel() }}</span>
+                  }
                 </span>
                 @if (task.duration) {
                   <span class="block pl-7 text-label-medium text-on-surface-variant">{{
@@ -117,6 +129,7 @@ export class WeekBoard {
   readonly addText = input.required<string>();
   readonly addLabel = input.required<(day: string) => string>();
   readonly deleteLabel = input.required<(name: string) => string>();
+  readonly overnightLabel = input.required<string>();
 
   readonly toggled = output<WeekBoardTaskEvent & { readonly done: boolean }>();
   readonly edit = output<WeekBoardTaskEvent>();
