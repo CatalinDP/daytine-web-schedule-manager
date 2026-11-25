@@ -119,6 +119,7 @@ import { isDoneOn } from '../data/task.model';
                 [deleteLabel]="strings.tasks.delete(task.name)"
                 [start]="task.start"
                 [end]="task.end"
+                [color]="task.color"
                 [overnightLabel]="strings.tasks.overnight"
                 (checkedChange)="list.toggle(task.id, $event)"
                 (edit)="list.openEdit(task.id)"

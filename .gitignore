@@ -48,3 +48,6 @@ Thumbs.db
 /.code-review-graph/
 docs/architecture.md
 docs/tickets.md
+
+*storybook.log
+storybook-static

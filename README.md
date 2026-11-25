@@ -50,14 +50,18 @@ Then open http://localhost:4200.
 
 ## Scripts
 
-| Command                | What it does                              |
-| ---------------------- | ----------------------------------------- |
-| `npm start`            | Dev server with live reload               |
-| `npm test`             | Unit and component tests (Vitest)         |
-| `npm run lint`         | ESLint                                    |
-| `npm run format`       | Format every file with Prettier           |
-| `npm run format:check` | Check the formatting without changing it  |
-| `npm run build`        | Production build into `dist/daytine-web/` |
+| Command                   | What it does                                |
+| ------------------------- | ------------------------------------------- |
+| `npm start`               | Dev server with live reload                 |
+| `npm test`                | Unit and component tests (Vitest)           |
+| `npm run lint`            | ESLint                                      |
+| `npm run format`          | Format every file with Prettier             |
+| `npm run format:check`    | Check the formatting without changing it    |
+| `npm run build`           | Production build into `dist/daytine-web/`   |
+| `npm run storybook`       | Component previews at http://localhost:6006 |
+| `npm run build-storybook` | Static Storybook into `storybook-static/`   |
+
+Stories live next to their component as `*.stories.ts` (see `src/app/design/`). Use the **Theme** toolbar button to switch light/dark, and the **Accessibility** panel to check each story.
 
 ## Continuous integration
 

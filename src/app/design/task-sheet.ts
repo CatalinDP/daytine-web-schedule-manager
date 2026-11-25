@@ -13,6 +13,8 @@ import { Modal } from './modal';
 import { TextField } from './text-field';
 import { TimeInput, TimeInputLabels } from './time-input';
 import { DayInfo, Task } from '../data/task.model';
+import { ColorPicker } from './color-picker';
+import { TagId } from '../data/tag.model';
 
 export interface TaskSheetLabels {
   readonly createTitle: string;
@@ -25,13 +27,15 @@ export interface TaskSheetLabels {
   readonly save: string;
   readonly delete: string;
   readonly time: TimeInputLabels;
+  readonly colors: Record<TagId, string>;
+  readonly colorLegend: string;
 }
 
 let nextId = 0;
 
 @Component({
   selector: 'dt-task-sheet',
-  imports: [Button, DayPicker, Modal, TextField, TimeInput],
+  imports: [Button, DayPicker, Modal, TextField, TimeInput, ColorPicker],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <dialog
@@ -67,6 +71,13 @@ let nextId = 0;
             (valueChange)="patch({ end: $event })"
           />
         </div>
+
+        <dt-color-picker
+          [legend]="labels().colorLegend"
+          [names]="labels().colors"
+          [selected]="draft().color"
+          (selectedChange)="patch({ color: $event })"
+        />
 
         <dt-day-picker
           [days]="days()"

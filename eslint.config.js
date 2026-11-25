@@ -4,6 +4,7 @@ const { defineConfig } = require('eslint/config');
 const tseslint = require('typescript-eslint');
 const angular = require('angular-eslint');
 const prettier = require('eslint-config-prettier');
+const storybook = require('eslint-plugin-storybook');
 
 module.exports = defineConfig([
   {
@@ -40,4 +41,5 @@ module.exports = defineConfig([
     extends: [angular.configs.templateRecommended, angular.configs.templateAccessibility],
     rules: {},
   },
+  storybook.configs['flat/recommended'],
 ]);

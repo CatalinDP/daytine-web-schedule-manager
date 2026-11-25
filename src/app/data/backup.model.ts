@@ -1,6 +1,7 @@
 import { TimeValue } from '../design/time';
 import { dateKey } from './day.model';
-import { Day, isTaskList, Task } from './task.model';
+import { TagId } from './tag.model';
+import { Day, isTaskList, withTaskDefaults, Task } from './task.model';
 
 // Shared with the Android app: fields map to DayOfWeek, LocalTime and LocalDate.
 // Bump BACKUP_VERSION when old readers can't handle a format change.
@@ -14,6 +15,7 @@ export interface BackupTask {
   end: TimeValue;
   days: Day[];
   completedOn: string[];
+  color: TagId;
 }
 
 export interface BackupFile {
@@ -59,14 +61,19 @@ export function parseBackup(text: string): ParseResult {
   if (typeof file['version'] !== 'number' || file['version'] > BACKUP_VERSION) {
     return { ok: false, error: 'newer-version' };
   }
-  if (!isTaskList(file['tasks']) || typeof file['exportedAt'] !== 'string') {
+
+  if (!Array.isArray(file['tasks'])) {
+    return { ok: false, error: 'invalid-data' };
+  }
+  const taskList = file['tasks'].map(withTaskDefaults);
+  if (!isTaskList(taskList) || typeof file['exportedAt'] !== 'string') {
     return { ok: false, error: 'invalid-data' };
   }
   const backup: BackupFile = {
     app: BACKUP_APP_ID,
     version: file['version'],
     exportedAt: file['exportedAt'],
-    tasks: file['tasks'].map((t) => toBackupTask(t)),
+    tasks: taskList.map(toBackupTask),
   };
   return { ok: true, backup: backup };
 }
@@ -79,6 +86,7 @@ function toBackupTask(t: Task): BackupTask {
     end: t.end,
     days: t.days,
     completedOn: t.completedOn,
+    color: t.color,
   };
 }
 
