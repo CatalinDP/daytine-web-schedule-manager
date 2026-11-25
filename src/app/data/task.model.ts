@@ -1,5 +1,6 @@
 import { TimeValue } from '../design/time';
 import { STRINGS } from '../mocks/strings';
+import { DEFAULT_TAG, isTagId, TagId } from './tag.model';
 
 export interface Task {
   id: string;
@@ -8,6 +9,7 @@ export interface Task {
   end: TimeValue;
   days: Day[];
   completedOn: string[];
+  color: TagId;
 }
 
 export function isDoneOn(task: Task, dateKey: string): boolean {
@@ -65,10 +67,17 @@ export function isTask(v: unknown): v is Task {
     isTimeValue(t['start']) &&
     isTimeValue(t['end']) &&
     Array.isArray(t['days']) &&
-    t['days'].every(isDay)
+    t['days'].every(isDay) &&
+    isTagId(t['color'])
   );
 }
 
 export function isTaskList(v: unknown): v is Task[] {
   return Array.isArray(v) && v.every(isTask);
+}
+
+// Task initially has been made without completedOn and color. This functions makes them work. If new properties are added to task, remember to update
+export function withTaskDefaults(v: unknown): unknown {
+  if (typeof v !== 'object' || v === null || Array.isArray(v)) return v;
+  return { completedOn: [], color: DEFAULT_TAG, ...v };
 }

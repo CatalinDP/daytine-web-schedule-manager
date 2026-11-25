@@ -45,6 +45,23 @@
   --color-on-error-container: var(--dt-on-error-container);
   --color-scrim: var(--dt-scrim);
 
+  --color-task-blue: var(--dt-task-blue);
+  --color-on-task-blue: var(--dt-on-task-blue);
+  --color-task-green: var(--dt-task-green);
+  --color-on-task-green: var(--dt-on-task-green);
+  --color-task-amber: var(--dt-task-amber);
+  --color-on-task-amber: var(--dt-on-task-amber);
+  --color-task-red: var(--dt-task-red);
+  --color-on-task-red: var(--dt-on-task-red);
+  --color-task-purple: var(--dt-task-purple);
+  --color-on-task-purple: var(--dt-on-task-purple);
+  --color-task-pink: var(--dt-task-pink);
+  --color-on-task-pink: var(--dt-on-task-pink);
+  --color-task-teal: var(--dt-task-teal);
+  --color-on-task-teal: var(--dt-on-task-teal);
+  --color-task-slate: var(--dt-task-slate);
+  --color-on-task-slate: var(--dt-on-task-slate);
+
   --shadow-*: initial;
   --shadow-card: var(--dt-shadow-card);
   --shadow-nav: var(--dt-shadow-nav);

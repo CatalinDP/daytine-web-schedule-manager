@@ -10,6 +10,7 @@ export interface WeekBoardTask {
   readonly done: boolean;
   readonly duration: string;
   readonly isOvernight: boolean;
+  readonly colorClass: string;
 }
 
 export interface WeekBoardDay {
@@ -53,9 +54,14 @@ export interface WeekBoardTaskEvent {
             <li
               class="group relative rounded-md border border-outline-variant bg-on-secondary transition-colors duration-200 hover:border-outline"
             >
+              <span
+                class="w-3 absolute rounded-s-md inset-y-0 inset-s-0"
+                [class]="task.colorClass"
+                aria-hidden="true"
+              ></span>
               <button
                 type="button"
-                class="block w-full rounded-md px-2 pt-3 pb-2 text-left focus-visible:-outline-offset-2"
+                class="block w-full rounded-md pl-6 pr-2 pt-3 pb-2 text-left focus-visible:-outline-offset-2"
                 (click)="edit.emit({ dayIndex, taskId: task.id })"
               >
                 <span
@@ -80,7 +86,7 @@ export interface WeekBoardTaskEvent {
                 <span class="mt-2 block text-label-large text-on-surface">{{ task.name }}</span>
               </button>
 
-              <span class="absolute top-0 left-0 flex size-11 items-center justify-center">
+              <span class="absolute top-0 left-4 flex size-11 items-center justify-center">
                 <input
                   type="checkbox"
                   class="peer absolute inset-0 m-0 size-full cursor-pointer opacity-0 disabled:cursor-not-allowed"

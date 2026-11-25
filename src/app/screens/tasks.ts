@@ -17,6 +17,7 @@ import { TaskListUi } from './task-list-ui';
 import { isDoneOn } from '../data/task.model';
 import { ClockService } from '../data/clock.service';
 import { addDays, formatWeekRange, weekOf } from '../data/day.model';
+import { TAG_STYLES } from '../design/color-tags';
 
 // 0 = Monday ... 6 = Sunday
 function weekIndexOf(date: Date): number {
@@ -101,6 +102,7 @@ function weekIndexOf(date: Date): number {
             [deleteLabel]="strings.tasks.delete(task.name)"
             [start]="task.start"
             [end]="task.end"
+            [color]="task.color"
             [overnightLabel]="strings.tasks.overnight"
             (checkedChange)="list.toggle(task.id, $event)"
             (edit)="list.openEdit(task.id)"
@@ -194,6 +196,7 @@ export class Tasks {
             this.strings.time.minuteUnit,
           ),
           isOvernight: isOvernightTask(task.start, task.end),
+          colorClass: TAG_STYLES[task.color].swatch,
         })),
     })),
   );

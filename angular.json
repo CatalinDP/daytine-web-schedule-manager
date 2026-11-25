@@ -74,6 +74,24 @@
           "options": {
             "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
           }
+        },
+        "storybook": {
+          "builder": "@storybook/angular-vite:start-storybook",
+          "options": {
+            "configDir": ".storybook",
+            "browserTarget": "daytine-web:build",
+            "port": 6006,
+            "styles": ["src/styles.css"]
+          }
+        },
+        "build-storybook": {
+          "builder": "@storybook/angular-vite:build-storybook",
+          "options": {
+            "configDir": ".storybook",
+            "browserTarget": "daytine-web:build",
+            "outputDir": "storybook-static",
+            "styles": ["src/styles.css"]
+          }
         }
       }
     }

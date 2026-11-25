@@ -11,6 +11,9 @@ import { TimeValue } from './time';
 import { TimeInput } from './time-input';
 import { WeekBoard } from './week-board';
 import { WeeklyStatView, barHeightPercent } from './weekly-stat-view';
+import { ColorPicker } from './color-picker';
+import { EN } from '../mocks/strings.en';
+import { TAG_IDS, TAG_PALETTE } from '../data/tag.model';
 
 const TIME_LABELS = { hour: 'Hour', minute: 'Minute' };
 
@@ -34,6 +37,14 @@ function buttonNamed(host: HTMLElement, name: string): HTMLButtonElement {
   const button = [...host.querySelectorAll('button')].find((b) => b.textContent?.trim() === name);
   if (!button) throw new Error(`No button named ${name}`);
   return button;
+}
+
+function radioNamed(host: HTMLElement, name: string): HTMLInputElement {
+  const label = [...host.querySelectorAll('label')].find((b) => b.textContent?.trim() === name);
+  if (!label) throw new Error(`No label named ${name}`);
+  const radio = label.querySelector('input');
+  if (!radio) throw new Error(`No radio child found`);
+  return radio;
 }
 
 function type(input: HTMLInputElement, value: string): void {
@@ -84,6 +95,7 @@ describe('TaskItem', () => {
     overnightLabel: 'Ends the next day',
     start: { hour: 22, minute: 0 },
     end: { hour: 22, minute: 30 },
+    color: 'teal',
   };
   it('keeps interactive elements as siblings, never nested', async () => {
     const { host } = await render(TaskItem, inputs);
@@ -161,6 +173,56 @@ describe('TaskItem', () => {
     const { host } = await render(TaskItem, inputs);
     expect(host.querySelector('dt-icon[title]')).toBeNull();
   });
+
+  it('shows the task color as a stripe', async () => {
+    const { host } = await render(TaskItem, inputs);
+    expect(query(host, 'span[aria-hidden="true"]').classList).toContain('bg-task-teal');
+  });
+
+  it('keeps the stripe straight in table rows', async () => {
+    const { host } = await render(TaskItem, { ...inputs, tableRow: true });
+    expect(query(host, 'span[aria-hidden="true"]').classList).toContain('lg:rounded-none');
+  });
+});
+
+describe('ColorPicker', () => {
+  const inputs = {
+    legend: EN.sheet.color,
+    selected: 'blue',
+    names: EN.colors,
+  };
+
+  it('renders one option per palette color', async () => {
+    const { host } = await render(ColorPicker, inputs);
+    const colorCount = TAG_IDS.length;
+    const options = host.querySelectorAll('input[type="radio"]');
+    expect(options.length).toBe(colorCount);
+  });
+
+  it('marks the selected color as checked', async () => {
+    const { host } = await render(ColorPicker, { ...inputs, selected: 'purple' });
+    const selectedRadio = radioNamed(host, 'Purple');
+    const allRadios = [...host.querySelectorAll('input')].filter((r) => r.checked === true).length;
+    expect(selectedRadio.checked).toBe(true);
+    expect(allRadios).toBe(1);
+  });
+
+  it('emits the color id when an option is chosen', async () => {
+    const { fixture, host } = await render(ColorPicker, inputs);
+    const chosen = vi.fn();
+    fixture.componentInstance.selectedChange.subscribe(chosen);
+    radioNamed(host, 'Purple').click();
+    expect(chosen).toHaveBeenCalledExactlyOnceWith('purple');
+  });
+
+  it('uses the injected palette', async () => {
+    TestBed.configureTestingModule({
+      providers: [{ provide: TAG_PALETTE, useValue: ['blue', 'teal'] }],
+    });
+    const { host } = await render(ColorPicker, inputs);
+    const labels = [...host.querySelectorAll('label')].map((l) => l.textContent.trim());
+    expect(labels).toEqual(['Blue', 'Teal']);
+  });
 });
 
 describe('SwitchRow', () => {
@@ -211,7 +273,14 @@ describe('OptionSetting', () => {
 });
 
 describe('WeekBoard', () => {
-  const task = { id: 'read', name: 'Read', time: '22:00', done: false, isOvernight: false };
+  const task = {
+    id: 'read',
+    name: 'Read',
+    time: '22:00',
+    done: false,
+    isOvernight: false,
+    colorClass: 'bg-task-teal',
+  };
   const day = { key: 'mon', label: 'Monday', shortLabel: 'Mon', date: 2, tasks: [task] };
   const inputs = {
     days: [
@@ -280,6 +349,11 @@ describe('WeekBoard', () => {
   it('announces nothing extra for same-day tasks', async () => {
     const { host } = await render(WeekBoard, inputs);
     expect(host.textContent).not.toContain('Ends the next day');
+  });
+
+  it('shows each tasks color', async () => {
+    const { host } = await render(WeekBoard, inputs);
+    expect(query(host, 'span[aria-hidden="true"]').classList).toContain('bg-task-teal');
   });
 });
 

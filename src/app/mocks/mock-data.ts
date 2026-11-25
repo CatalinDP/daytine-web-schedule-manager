@@ -3,6 +3,7 @@ import { TaskSheetLabels } from '../design/task-sheet';
 import { WeatherIcon } from '../design/weather';
 import { STRINGS } from './strings';
 import { Task } from '../data/task.model';
+import { DEFAULT_TAG } from '../data/tag.model';
 
 export interface MockHint {
   readonly id: string;
@@ -21,6 +22,7 @@ export const EMPTY_TASK: Task = {
   end: { hour: 9, minute: 30 },
   days: [],
   completedOn: [],
+  color: DEFAULT_TAG,
 };
 
 export const WEATHER: {
@@ -51,4 +53,6 @@ export const TASK_SHEET_LABELS: TaskSheetLabels = {
   ...STRINGS.sheet,
   cancel: STRINGS.common.cancel,
   time: STRINGS.time,
+  colors: STRINGS.colors,
+  colorLegend: STRINGS.sheet.color,
 };

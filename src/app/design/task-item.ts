@@ -3,6 +3,8 @@ import { ChangeDetectionStrategy, Component, computed, input, output, signal } f
 import { IconButton } from './button';
 import { Icon } from './icon';
 import { isOvernightTask, TimeValue } from './time';
+import { TagId } from '../data/tag.model';
+import { TAG_STYLES } from './color-tags';
 
 const SWIPE_DELETE_DISTANCE_PX = 96;
 const SWIPE_START_SLOP_PX = 8;
@@ -36,6 +38,11 @@ let nextId = 0;
       (pointerup)="onPointerUp()"
       (pointercancel)="resetSwipe()"
     >
+      <span
+        class="w-3 absolute rounded-s-lg inset-y-0 inset-s-0"
+        [class]="stripeClass()"
+        aria-hidden="true"
+      ></span>
       <span class="relative mx-3 flex size-11 shrink-0 items-center justify-center">
         <input
           type="checkbox"
@@ -95,6 +102,7 @@ export class TaskItem {
   readonly deleteLabel = input.required<string>();
   readonly start = input.required<TimeValue>();
   readonly end = input.required<TimeValue>();
+  readonly color = input.required<TagId>();
   readonly checked = input(false);
   readonly isToday = input(true);
   readonly tableRow = input(false);
@@ -110,6 +118,15 @@ export class TaskItem {
   private swipeStartX: number | null = null;
 
   protected readonly isOvernight = computed(() => isOvernightTask(this.start(), this.end()));
+
+  protected readonly stripeClass = computed(() => {
+    return [
+      TAG_STYLES[this.color()].swatch,
+      ...(this.tableRow()
+        ? ['lg:rounded-none', 'lg:group-first:rounded-ss-lg', 'lg:group-last:rounded-es-lg']
+        : []),
+    ];
+  });
 
   protected onCheckedChange(event: Event): void {
     this.checkedChange.emit((event.target as HTMLInputElement).checked);

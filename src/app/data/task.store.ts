@@ -1,5 +1,5 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { isTaskList, Task } from './task.model';
+import { isTaskList, Task, withTaskDefaults } from './task.model';
 import { LocalStore } from './local-store';
 
 const KEY = 'dt-tasks-v1';
@@ -50,12 +50,10 @@ export class TaskService {
     this.lastDeleted = null;
   }
 
-  // Old tasks had `done: boolean` instead of `completedOn`
+  // Old tasks had `done: boolean` instead of `completedOn`. Old task didn't have color
   private load(): Task[] {
     const raw = this.storage.read(KEY, Array.isArray) ?? [];
-    const tasks = raw.map((t) =>
-      t && typeof t === 'object' && !('completedOn' in t) ? { ...t, completedOn: [] } : t,
-    );
+    const tasks = raw.map((t) => withTaskDefaults(t));
     return isTaskList(tasks) ? tasks : [];
   }
 
